@@ -1,0 +1,1290 @@
+{
+"area": "hsr",
+"center": {
+"lat": 12.911333400909092,
+"lon": 77.65141367545455
+},
+"attribution": "© OpenStreetMap contributors (ODbL)",
+"pois": [
+{
+"osmId": 1281143322,
+"name": "Lakme Beauty Parlour",
+"category": "hairdresser",
+"kind": "shop",
+"lng": 77.6513704,
+"lat": 12.9117853
+},
+{
+"osmId": 1281143331,
+"name": "MK Retail Super Market",
+"category": "supermarket",
+"kind": "shop",
+"lng": 77.6512865,
+"lat": 12.911805
+},
+{
+"osmId": 1299903066,
+"name": "Papa John's",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6516773,
+"lat": 12.9132738
+},
+{
+"osmId": 1299906413,
+"name": "Swadeshi",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6516321,
+"lat": 12.9151009
+},
+{
+"osmId": 1299907760,
+"name": "Next",
+"category": "electronics",
+"kind": "shop",
+"lng": 77.6516561,
+"lat": 12.914623
+},
+{
+"osmId": 1299909591,
+"name": "Multiplex Hypermarket",
+"category": "department_store",
+"kind": "shop",
+"lng": 77.6516837,
+"lat": 12.9144523
+},
+{
+"osmId": 1467831581,
+"name": "Sree Shakthi medicals",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6492636,
+"lat": 12.9076575
+},
+{
+"osmId": 1468247384,
+"name": "MK Supermart",
+"category": "convenience",
+"kind": "shop",
+"lng": 77.6486793,
+"lat": 12.9120853
+},
+{
+"osmId": 1468908276,
+"name": "A K Clinic",
+"category": "clinic",
+"kind": "amenity",
+"lng": 77.6493161,
+"lat": 12.9076539
+},
+{
+"osmId": 1468908281,
+"name": "Apollo Pharmacy",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6493235,
+"lat": 12.9081354
+},
+{
+"osmId": 1468908297,
+"name": "State Bank of India",
+"category": "bank",
+"kind": "amenity",
+"lng": 77.6493741,
+"lat": 12.9120556
+},
+{
+"osmId": 1468908300,
+"name": "health nest",
+"category": "hospital",
+"kind": "amenity",
+"lng": 77.6488507,
+"lat": 12.9076252
+},
+{
+"osmId": 1660287155,
+"name": "Floretz Montessori",
+"category": "kindergarten",
+"kind": "amenity",
+"lng": 77.6497345,
+"lat": 12.9088226
+},
+{
+"osmId": 2249676561,
+"name": "State Bank of India",
+"category": "bank",
+"kind": "amenity",
+"lng": 77.6516892,
+"lat": 12.9118526
+},
+{
+"osmId": 2249679251,
+"name": "HDFC Bank",
+"category": "atm",
+"kind": "amenity",
+"lng": 77.6491751,
+"lat": 12.9097757
+},
+{
+"osmId": 2414612953,
+"name": "Vaidyaratnam Oushadhasala",
+"category": "hospital",
+"kind": "amenity",
+"lng": 77.6485852,
+"lat": 12.9120952
+},
+{
+"osmId": 3198572489,
+"name": "Shubh Sweets",
+"category": "confectionery",
+"kind": "shop",
+"lng": 77.6516828,
+"lat": 12.9138424
+},
+{
+"osmId": 3198577860,
+"name": "Just momo",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6485604,
+"lat": 12.9120961
+},
+{
+"osmId": 3198578925,
+"name": "Wang's Kitchen",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6517482,
+"lat": 12.9124536
+},
+{
+"osmId": 4315983818,
+"name": "Goli Vada Pav",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6513704,
+"lat": 12.911867
+},
+{
+"osmId": 4406867615,
+"name": "Mishmash",
+"category": "bar",
+"kind": "amenity",
+"lng": 77.6509658,
+"lat": 12.9121185
+},
+{
+"osmId": 4445083916,
+"name": "Reddy Restaurant",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6502119,
+"lat": 12.912141
+},
+{
+"osmId": 4445404066,
+"name": "Fish & Fries",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6515086,
+"lat": 12.9085334
+},
+{
+"osmId": 4487296403,
+"name": "Adidas",
+"category": "sports",
+"kind": "shop",
+"lng": 77.6476636,
+"lat": 12.9082306
+},
+{
+"osmId": 4487933394,
+"name": "PVR Sports & Trophies",
+"category": "sports",
+"kind": "shop",
+"lng": 77.6493391,
+"lat": 12.9102339
+},
+{
+"osmId": 4489889293,
+"name": "Food Palace Supermarket",
+"category": "supermarket",
+"kind": "shop",
+"lng": 77.6491751,
+"lat": 12.9138002
+},
+{
+"osmId": 6204917485,
+"name": "Organic World",
+"category": "supermarket",
+"kind": "shop",
+"lng": 77.6514533,
+"lat": 12.9118041
+},
+{
+"osmId": 6400279714,
+"name": "GULPS Parangipalya, BBMP Agara",
+"category": "school",
+"kind": "amenity",
+"lng": 77.650152,
+"lat": 12.9097362
+},
+{
+"osmId": 6400298824,
+"name": "Mount Carmel EHPS HSR Layout, BBMP Agara",
+"category": "school",
+"kind": "amenity",
+"lng": 77.6484691,
+"lat": 12.9137624
+},
+{
+"osmId": 6601882386,
+"name": "Kapas",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.647847,
+"lat": 12.9120808
+},
+{
+"osmId": 6616986483,
+"name": "Corner House",
+"category": "ice_cream",
+"kind": "amenity",
+"lng": 77.6517528,
+"lat": 12.9099734
+},
+{
+"osmId": 7031782791,
+"name": "Jute Cottage",
+"category": "gift",
+"kind": "shop",
+"lng": 77.6520625,
+"lat": 12.9095592
+},
+{
+"osmId": 9312685207,
+"name": "Cafe 27",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6522376,
+"lat": 12.9113496
+},
+{
+"osmId": 9312716290,
+"name": "Chai Point",
+"category": "cafe",
+"kind": "shop",
+"lng": 77.6520109,
+"lat": 12.9126404
+},
+{
+"osmId": 9514389117,
+"name": "You Me And Tea",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6517169,
+"lat": 12.9089583
+},
+{
+"osmId": 9649527545,
+"name": "Ramraj",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6517307,
+"lat": 12.9108618
+},
+{
+"osmId": 9649527853,
+"name": "Starbucks",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6508736,
+"lat": 12.9121176
+},
+{
+"osmId": 9649527854,
+"name": "Onesta",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6517123,
+"lat": 12.9122712
+},
+{
+"osmId": 9649527855,
+"name": "Domino's",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6520007,
+"lat": 12.912848
+},
+{
+"osmId": 9649527860,
+"name": "Juice Shop",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6507879,
+"lat": 12.9087319
+},
+{
+"osmId": 9649527870,
+"name": "KLM Fashion",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6517077,
+"lat": 12.9084606
+},
+{
+"osmId": 9649527871,
+"name": "Kapoor's Cafe",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6519335,
+"lat": 12.9080528
+},
+{
+"osmId": 9833465632,
+"name": "Apollo Pharamacy",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6491004,
+"lat": 12.9133429
+},
+{
+"osmId": 9833465658,
+"name": "Nandini",
+"category": "kiosk",
+"kind": "shop",
+"lng": 77.649106,
+"lat": 12.9130743
+},
+{
+"osmId": 9858668160,
+"name": "Peter England",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6520634,
+"lat": 12.9102168
+},
+{
+"osmId": 9858668161,
+"name": "Nykaa On Trend",
+"category": "cosmetics",
+"kind": "shop",
+"lng": 77.6520606,
+"lat": 12.9103363
+},
+{
+"osmId": 9858668162,
+"name": "Plum and Sugar",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.6517399,
+"lat": 12.9112247
+},
+{
+"osmId": 9892036255,
+"name": "SLAY Coffee",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6523224,
+"lat": 12.9126854
+},
+{
+"osmId": 9904143769,
+"name": "Baskin-Robbins",
+"category": "ice_cream",
+"kind": "amenity",
+"lng": 77.6516754,
+"lat": 12.9102608
+},
+{
+"osmId": 10049313448,
+"name": "Raga Arts",
+"category": "craft",
+"kind": "shop",
+"lng": 77.6517031,
+"lat": 12.9139466
+},
+{
+"osmId": 10049313457,
+"name": "Fabindia",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6516837,
+"lat": 12.9130986
+},
+{
+"osmId": 10049313479,
+"name": "VRK Silks",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6516846,
+"lat": 12.9104261
+},
+{
+"osmId": 10049313480,
+"name": "Raymond",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6516763,
+"lat": 12.9101144
+},
+{
+"osmId": 10049377704,
+"name": "Loom Craft",
+"category": "furniture",
+"kind": "shop",
+"lng": 77.6515215,
+"lat": 12.912167
+},
+{
+"osmId": 10049386125,
+"name": "Plan B",
+"category": "bar",
+"kind": "amenity",
+"lng": 77.6507096,
+"lat": 12.9122173
+},
+{
+"osmId": 10049386139,
+"name": "Zudio",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6492027,
+"lat": 12.9120619
+},
+{
+"osmId": 10049386157,
+"name": "More",
+"category": "supermarket",
+"kind": "shop",
+"lng": 77.6480037,
+"lat": 12.9120691
+},
+{
+"osmId": 10049437550,
+"name": "Have Nuts",
+"category": "greengrocer",
+"kind": "shop",
+"lng": 77.6518551,
+"lat": 12.9078605
+},
+{
+"osmId": 10228963971,
+"name": "Polar Bear",
+"category": "ice_cream",
+"kind": "amenity",
+"lng": 77.6517243,
+"lat": 12.911054
+},
+{
+"osmId": 10228963972,
+"name": "Aveda x Nykaa",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.6520524,
+"lat": 12.9104414
+},
+{
+"osmId": 10228963973,
+"name": "Allura Imitation",
+"category": "jewelry",
+"kind": "shop",
+"lng": 77.6520293,
+"lat": 12.9105564
+},
+{
+"osmId": 10228963974,
+"name": "VLCC Wellness Centre",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.6516819,
+"lat": 12.9106228
+},
+{
+"osmId": 10617515634,
+"name": "Lama's Cafe",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6522127,
+"lat": 12.9125722
+},
+{
+"osmId": 10617515635,
+"name": "Ice Treat Cafe",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6535085,
+"lat": 12.9126377
+},
+{
+"osmId": 10718179795,
+"name": "SBI Sector 2‌, HSR Layout",
+"category": "atm",
+"kind": "amenity",
+"lng": 77.6517243,
+"lat": 12.9118544
+},
+{
+"osmId": 10718179796,
+"name": "Union Bank HSR Layout",
+"category": "atm",
+"kind": "amenity",
+"lng": 77.6523049,
+"lat": 12.9126063
+},
+{
+"osmId": 10718514443,
+"name": "Jiva Ayurveda",
+"category": "clinic",
+"kind": "amenity",
+"lng": 77.6519242,
+"lat": 12.9127482
+},
+{
+"osmId": 10718658055,
+"name": "Ram Medicals HSR Layout",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6519252,
+"lat": 12.9127455
+},
+{
+"osmId": 10746272637,
+"name": "India Post Office",
+"category": "post_office",
+"kind": "amenity",
+"lng": 77.6536901,
+"lat": 12.9118472
+},
+{
+"osmId": 10778975981,
+"name": "Padithem Health Centre",
+"category": "doctors",
+"kind": "amenity",
+"lng": 77.6518855,
+"lat": 12.9078956
+},
+{
+"osmId": 11085582497,
+"name": "Glen's Bakehouse",
+"category": "cafe",
+"kind": "shop",
+"lng": 77.648294,
+"lat": 12.9120763
+},
+{
+"osmId": 11085582499,
+"name": "Sai Ram Hot Chips",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6491456,
+"lat": 12.913961
+},
+{
+"osmId": 11085582500,
+"name": "Kolkata Famous Kati Roll",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6516828,
+"lat": 12.9136528
+},
+{
+"osmId": 11085582503,
+"name": "HSR Fresh Cane Juice",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6489032,
+"lat": 12.912194
+},
+{
+"osmId": 11085582504,
+"name": "Lotus Hospital",
+"category": "hospital",
+"kind": "amenity",
+"lng": 77.6491566,
+"lat": 12.9144604
+},
+{
+"osmId": 11085606207,
+"name": "Mashallah Tea",
+"category": "tea",
+"kind": "shop",
+"lng": 77.649176,
+"lat": 12.9139942
+},
+{
+"osmId": 11085606209,
+"name": "Ciciana",
+"category": "bakery",
+"kind": "shop",
+"lng": 77.6517279,
+"lat": 12.9137732
+},
+{
+"osmId": 11085606210,
+"name": "Sri Balaji Sweets",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6519731,
+"lat": 12.913431
+},
+{
+"osmId": 11085606212,
+"name": "Nagashree Juice",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6489843,
+"lat": 12.9137481
+},
+{
+"osmId": 11232366435,
+"name": "Napoli",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6524698,
+"lat": 12.9126647
+},
+{
+"osmId": 11232384244,
+"name": "Yes Sir",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6536569,
+"lat": 12.9131004
+},
+{
+"osmId": 11232384245,
+"name": "Toping Twist",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.653656,
+"lat": 12.9130492
+},
+{
+"osmId": 11248332956,
+"name": "Ownd",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6493963,
+"lat": 12.9117592
+},
+{
+"osmId": 11277885672,
+"name": "Coffeetales",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6479632,
+"lat": 12.9120538
+},
+{
+"osmId": 11279852904,
+"name": "Shubham Decor",
+"category": "curtain",
+"kind": "shop",
+"lng": 77.6516846,
+"lat": 12.910462
+},
+{
+"osmId": 11309680641,
+"name": "Kurl-On",
+"category": "bed",
+"kind": "shop",
+"lng": 77.6494488,
+"lat": 12.9088523
+},
+{
+"osmId": 11309680642,
+"name": "iTouch Restore",
+"category": "mobile_phone",
+"kind": "shop",
+"lng": 77.6494626,
+"lat": 12.9088801
+},
+{
+"osmId": 11309680643,
+"name": "HSR Juice Point",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6494552,
+"lat": 12.9090768
+},
+{
+"osmId": 11309680644,
+"name": "sugar.fit",
+"category": "clinic",
+"kind": "amenity",
+"lng": 77.6494599,
+"lat": 12.9089439
+},
+{
+"osmId": 11309680646,
+"name": "The Smile Studio",
+"category": "dentist",
+"kind": "amenity",
+"lng": 77.649952,
+"lat": 12.9121104
+},
+{
+"osmId": 11309680648,
+"name": "The Momo Lab",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6517224,
+"lat": 12.9123135
+},
+{
+"osmId": 11309708348,
+"name": "Manyavar",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6516607,
+"lat": 12.914491
+},
+{
+"osmId": 11310182984,
+"name": "LJ Iyengar's Bakery",
+"category": "bakery",
+"kind": "shop",
+"lng": 77.6491677,
+"lat": 12.9090023
+},
+{
+"osmId": 11355554483,
+"name": "Garden House Cafe",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6506027,
+"lat": 12.9087409
+},
+{
+"osmId": 11355554484,
+"name": "The Brussles Waffle",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6505695,
+"lat": 12.908731
+},
+{
+"osmId": 11355554485,
+"name": "King's & Queens's Premium Salon",
+"category": "hairdresser",
+"kind": "shop",
+"lng": 77.6494976,
+"lat": 12.9088361
+},
+{
+"osmId": 11355554486,
+"name": "Ganpati Collection",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6495013,
+"lat": 12.908987
+},
+{
+"osmId": 11355554487,
+"name": "New Fashion Ladies Tailor",
+"category": "tailor",
+"kind": "shop",
+"lng": 77.6495013,
+"lat": 12.9090059
+},
+{
+"osmId": 11355554488,
+"name": "Swagath Jewellers and Bankers",
+"category": "jewelry",
+"kind": "shop",
+"lng": 77.6494654,
+"lat": 12.9091586
+},
+{
+"osmId": 11368536064,
+"name": "Aster Pharmacy",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6492497,
+"lat": 12.9108303
+},
+{
+"osmId": 11368536065,
+"name": "Imperio",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6497363,
+"lat": 12.9117089
+},
+{
+"osmId": 11383593070,
+"name": "Gochick",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6495649,
+"lat": 12.9117646
+},
+{
+"osmId": 11383593071,
+"name": "Style Up",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6497944,
+"lat": 12.9116909
+},
+{
+"osmId": 11383593072,
+"name": "Unilet",
+"category": "electronics",
+"kind": "shop",
+"lng": 77.6516515,
+"lat": 12.9121401
+},
+{
+"osmId": 11383593073,
+"name": "Chaayos",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6516985,
+"lat": 12.9123413
+},
+{
+"osmId": 11384926622,
+"name": "Health and Glow",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.6516035,
+"lat": 12.9134849
+},
+{
+"osmId": 11394011887,
+"name": "Greenmart",
+"category": "supermarket",
+"kind": "shop",
+"lng": 77.6492617,
+"lat": 12.9114439
+},
+{
+"osmId": 11394011888,
+"name": "Feet Fashion",
+"category": "shoes",
+"kind": "shop",
+"lng": 77.6516395,
+"lat": 12.9148781
+},
+{
+"osmId": 11397742478,
+"name": "Dr. BR Ambedkar Samudaya Bhavan",
+"category": "community_centre",
+"kind": "amenity",
+"lng": 77.6494884,
+"lat": 12.9085953
+},
+{
+"osmId": 11399600412,
+"name": "Yulu Zone",
+"category": "bicycle_rental",
+"kind": "amenity",
+"lng": 77.6519316,
+"lat": 12.9118275
+},
+{
+"osmId": 11399737010,
+"name": "IndusInd Bank",
+"category": "bank",
+"kind": "amenity",
+"lng": 77.6519427,
+"lat": 12.9082621
+},
+{
+"osmId": 11399909241,
+"name": "AS Mobile",
+"category": "copyshop",
+"kind": "shop",
+"lng": 77.6495364,
+"lat": 12.908969
+},
+{
+"osmId": 11399909242,
+"name": "OR Sports",
+"category": "sports",
+"kind": "shop",
+"lng": 77.6495179,
+"lat": 12.9090095
+},
+{
+"osmId": 11399909243,
+"name": "VDesign Interiors",
+"category": "interior_decoration",
+"kind": "shop",
+"lng": 77.649517,
+"lat": 12.9089637
+},
+{
+"osmId": 11399914986,
+"name": "Optical Corner",
+"category": "optician",
+"kind": "shop",
+"lng": 77.6490875,
+"lat": 12.9104243
+},
+{
+"osmId": 11399914987,
+"name": "Amma Pastries",
+"category": "bakery",
+"kind": "shop",
+"lng": 77.6493336,
+"lat": 12.9106713
+},
+{
+"osmId": 11399914989,
+"name": "House Of Dakshina",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6493649,
+"lat": 12.9121266
+},
+{
+"osmId": 11399914991,
+"name": "Ananda Honda",
+"category": "motorcycle",
+"kind": "shop",
+"lng": 77.6516441,
+"lat": 12.9121778
+},
+{
+"osmId": 11399914992,
+"name": "Axis Bank",
+"category": "bank",
+"kind": "amenity",
+"lng": 77.6516303,
+"lat": 12.9141316
+},
+{
+"osmId": 11409538672,
+"name": "Green's Unisex Salon",
+"category": "hairdresser",
+"kind": "shop",
+"lng": 77.6492156,
+"lat": 12.9086708
+},
+{
+"osmId": 11409538674,
+"name": "Daily Essentials",
+"category": "supermarket",
+"kind": "shop",
+"lng": 77.6500091,
+"lat": 12.9086034
+},
+{
+"osmId": 11411649453,
+"name": "Sri Varu Silver",
+"category": "jewelry",
+"kind": "shop",
+"lng": 77.6520441,
+"lat": 12.9106561
+},
+{
+"osmId": 11411649454,
+"name": "Rangriti",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.652045,
+"lat": 12.9106345
+},
+{
+"osmId": 11411649455,
+"name": "Prince n Princess",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6520459,
+"lat": 12.9106174
+},
+{
+"osmId": 11411649456,
+"name": "Gini & Jony",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6520441,
+"lat": 12.9105959
+},
+{
+"osmId": 11411649457,
+"name": "Dermaville",
+"category": "doctors",
+"kind": "amenity",
+"lng": 77.6520699,
+"lat": 12.9106507
+},
+{
+"osmId": 11411649458,
+"name": "Electro Cloud",
+"category": "computer",
+"kind": "shop",
+"lng": 77.6520671,
+"lat": 12.9106157
+},
+{
+"osmId": 11411649460,
+"name": "Bounce Salons",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.652092,
+"lat": 12.9105501
+},
+{
+"osmId": 11411649461,
+"name": "Asya Thai Spa",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.65215,
+"lat": 12.9102132
+},
+{
+"osmId": 11411649462,
+"name": "Ramyakatta",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6521335,
+"lat": 12.9105447
+},
+{
+"osmId": 11411649463,
+"name": "SOTC For Holidays",
+"category": "travel_agency",
+"kind": "shop",
+"lng": 77.6520671,
+"lat": 12.9105456
+},
+{
+"osmId": 11414534035,
+"name": "The Humble Pie",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6504773,
+"lat": 12.9085423
+},
+{
+"osmId": 11414534036,
+"name": "BBQ Mechanic",
+"category": "fast_food",
+"kind": "amenity",
+"lng": 77.6505464,
+"lat": 12.9085379
+},
+{
+"osmId": 11433878025,
+"name": "Coffee & More",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6499483,
+"lat": 12.9085962
+},
+{
+"osmId": 11478656271,
+"name": "Mansi Creations",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.6520735,
+"lat": 12.9101045
+},
+{
+"osmId": 11478656275,
+"name": "Hema Jewellers",
+"category": "jewelry",
+"kind": "shop",
+"lng": 77.6517224,
+"lat": 12.9102384
+},
+{
+"osmId": 11533141769,
+"name": "HSR Donne Biryani",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6489014,
+"lat": 12.9146715
+},
+{
+"osmId": 11533141770,
+"name": "Farm2fresh",
+"category": "greengrocer",
+"kind": "shop",
+"lng": 77.6488875,
+"lat": 12.9144676
+},
+{
+"osmId": 11533141772,
+"name": "Wakefit",
+"category": "furniture",
+"kind": "shop",
+"lng": 77.6482406,
+"lat": 12.9120826
+},
+{
+"osmId": 11684016159,
+"name": "Xboom Drones",
+"category": "electronics",
+"kind": "shop",
+"lng": 77.6519777,
+"lat": 12.9086762
+},
+{
+"osmId": 11684016160,
+"name": "Union Bank of India",
+"category": "bank",
+"kind": "amenity",
+"lng": 77.6516736,
+"lat": 12.9088136
+},
+{
+"osmId": 11948295136,
+"name": "Ganesh Medicals",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6490332,
+"lat": 12.9075731
+},
+{
+"osmId": 11964861618,
+"name": "Galatta",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.649141,
+"lat": 12.9150497
+},
+{
+"osmId": 11998243869,
+"name": "Manju Departmental Store",
+"category": "grocery",
+"kind": "shop",
+"lng": 77.6492276,
+"lat": 12.9077743
+},
+{
+"osmId": 11998243969,
+"name": "Sri Balaji Medicals",
+"category": "pharmacy",
+"kind": "amenity",
+"lng": 77.6491096,
+"lat": 12.9078848
+},
+{
+"osmId": 11998244069,
+"name": "Mahashakti Fancy & Gift Paradise",
+"category": "gift",
+"kind": "shop",
+"lng": 77.6490737,
+"lat": 12.9077527
+},
+{
+"osmId": 12117979201,
+"name": "HSR Rice Traders",
+"category": "grocery",
+"kind": "shop",
+"lng": 77.6491189,
+"lat": 12.9079019
+},
+{
+"osmId": 12129014444,
+"name": "Tinytalian",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.653655,
+"lat": 12.9128659
+},
+{
+"osmId": 12129014445,
+"name": "Olive Street Food Cafe",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6531647,
+"lat": 12.9126916
+},
+{
+"osmId": 12260569946,
+"name": "Somras Bar and Kitchen",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6495308,
+"lat": 12.9121625
+},
+{
+"osmId": 12482481196,
+"name": "Reform Dental Care",
+"category": "dentist",
+"kind": "amenity",
+"lng": 77.6491179,
+"lat": 12.9133429
+},
+{
+"osmId": 12553411801,
+"name": "Dhara Spa HSR Layout",
+"category": "beauty",
+"kind": "shop",
+"lng": 77.6516275,
+"lat": 12.9129683
+},
+{
+"osmId": 12980126189,
+"name": "The Snug Cuppa",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6486571,
+"lat": 12.9081345
+},
+{
+"osmId": 13175147189,
+"name": "Optics Nest",
+"category": "optician",
+"kind": "shop",
+"lng": 77.6478959,
+"lat": 12.9120449
+},
+{
+"osmId": 13175147191,
+"name": "BBLUNT",
+"category": "hairdresser",
+"kind": "shop",
+"lng": 77.6503547,
+"lat": 12.9117754
+},
+{
+"osmId": 13175211583,
+"name": "Make Di Hatti",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6496654,
+"lat": 12.9121311
+},
+{
+"osmId": 13408359321,
+"name": "MotoProGear",
+"category": "clothes",
+"kind": "shop",
+"lng": 77.652021,
+"lat": 12.9090256
+},
+{
+"osmId": 13566435717,
+"name": "Tim Hortons",
+"category": "cafe",
+"kind": "amenity",
+"lng": 77.6477613,
+"lat": 12.9120161
+},
+{
+"osmId": 13821019822,
+"name": "Healing Hands Clinic - HSR Layout, Bengaluru",
+"category": "hospital",
+"kind": "amenity",
+"lng": 77.6479899,
+"lat": 12.9120368
+},
+{
+"osmId": 13959538001,
+"name": "Goan POIEE",
+"category": "restaurant",
+"kind": "amenity",
+"lng": 77.6490792,
+"lat": 12.9136232
+}
+]
+}

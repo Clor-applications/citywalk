@@ -1,0 +1,23 @@
+name: citywalk
+
+services:
+  db:
+    image: imresamu/postgis:16-3.4
+    container_name: citywalk-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: citywalk
+      POSTGRES_PASSWORD: citywalk
+      POSTGRES_DB: citywalk
+    ports:
+      - "55432:5432"
+    volumes:
+      - citywalk-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citywalk -d citywalk"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  citywalk-db:

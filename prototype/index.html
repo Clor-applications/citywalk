@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CityWalk Prototype</title>
+<style>
+:root{--bg:#14202c;--panel:#fff;--ink:#16202b;--muted:#5b6774;--line:#e3e8ee;--accent:#0f7b6c;--chip:#eef3f6;--warn:#b54708}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#cfe3ea}
+canvas{display:block;touch-action:none}
+#top{position:fixed;top:12px;left:12px;right:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;pointer-events:none;z-index:5}
+#top>*{pointer-events:auto}
+.brand{background:var(--bg);color:#fff;padding:8px 12px;border-radius:10px;font-weight:700;letter-spacing:.5px}
+.seg{display:flex;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.seg button{border:0;background:none;padding:8px 12px;font:inherit;cursor:pointer;color:var(--ink)}
+.seg button.on{background:var(--accent);color:#fff}
+#search{flex:1;min-width:150px;max-width:340px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);font:inherit;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#panel{position:fixed;top:64px;right:12px;bottom:12px;width:min(390px,calc(100vw - 24px));background:var(--panel);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.25);overflow:auto;display:none;padding:16px 16px 24px;z-index:6}
+#panel.show{display:block}
+#panel h2{margin:4px 0 2px;font-size:20px}
+#panel h3{margin:18px 0 8px;font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.close{position:sticky;top:0;float:right;border:0;background:var(--chip);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit}
+.sub{color:var(--muted);font-size:14px}
+.chip{display:inline-block;background:var(--chip);border-radius:999px;padding:3px 9px;font-size:12px;margin:2px 4px 2px 0}
+.chip.ok{background:#dff4ec;color:#0b5e45}.chip.warn{background:#fff1e0;color:var(--warn)}.chip.ai{background:#ece8ff;color:#4b3aa8}
+.card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
+.card .row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.card b{font-size:15px}
+.btn{border:0;background:var(--accent);color:#fff;border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+select,input[type=date]{font:inherit;padding:6px;border-radius:8px;border:1px solid var(--line)}
+.note{font-size:12px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.listitem{display:flex;gap:10px;align-items:center;padding:9px 6px;border-bottom:1px solid var(--line);cursor:pointer}
+.listitem:hover{background:var(--chip)}
+.dot{width:12px;height:12px;border-radius:3px;flex:none}
+#prompt{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--bg);color:#fff;border:0;border-radius:999px;padding:10px 18px;font:inherit;display:none;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:4}
+#help{position:fixed;left:12px;bottom:12px;background:rgba(255,255,255,.92);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--muted);max-width:290px;z-index:3}
+#legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+#legend span{display:flex;align-items:center;gap:4px}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:#102a22;color:#fff;padding:10px 14px;border-radius:10px;font-size:14px;display:none;z-index:9;max-width:90vw}
+@media (max-width:600px){#help{display:none}.brand{display:none}}
+</style>
+</head>
+<body>
+<div id="top">
+  <div class="brand">CITYWALK · demo</div>
+  <div class="seg" id="modes">
+    <button data-mode="walk" class="on">Walk</button>
+    <button data-mode="map">Map</button>
+    <button data-mode="list">List</button>
+  </div>
+  <input id="search" placeholder="Search: react, dosa, hotel, intern…" autocomplete="off">
+</div>
+<div id="panel"></div>
+<button id="prompt"></button>
+<div id="toast"></div>
+<div id="help">
+  <b>Move:</b> WASD / arrows, or click the ground · <b>Rotate:</b> drag · <b>Zoom:</b> wheel · <b>Enter:</b> E or click a building
+  <div id="legend"></div>
+  <div style="margin-top:6px">All businesses here are fictional demo data.</div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* =====================================================================
+   1. DATA LAYER  (real app: GET /v1/world/cells/:id  +  GET /v1/places?cell=)
+   3D tiles and business data arrive separately. Scene only *references* ids.
+   ===================================================================== */
+const TYPES = {
+  company:    {color:'#3b6fd8', icon:'💼', label:'Company'},
+  hotel:      {color:'#c98a2e', icon:'🏨', label:'Hotel'},
+  restaurant: {color:'#d2493f', icon:'🍽️', label:'Restaurant / Café'},
+  cowork:     {color:'#2a9d8f', icon:'☕', label:'Cowork & events'},
+  problem:    {color:'#8e44ad', icon:'🧩', label:'Problem board'},
+  unclaimed:  {color:'#9aa0a6', icon:'❔', label:'Unclaimed (map data)'},
+};
+
+const ENTITIES = [
+  {id:'c1',slot:0,h:16,type:'company',name:'Lumen Labs',verified:true,
+   about:'SaaS for invoicing in small retail shops. 14 people.',
+   jobs:[{title:'Frontend Developer (React)',kind:'Full-time',pay:'₹12–18 LPA',posted:'2 days ago'},
+         {title:'Product Design Intern',kind:'Internship · 3 months',pay:'₹25k / month',posted:'5 days ago'}]},
+  {id:'h1',slot:1,h:20,type:'hotel',name:'Courtyard Stay Inn',verified:true,
+   about:'Business hotel, 5 min walk to the cowork cluster.',
+   rooms:[{name:'Standard',price:3200,left:4},{name:'Deluxe',price:4800,left:1},{name:'Suite',price:8200,left:0}],checkin:'12:00'},
+  {id:'r1',slot:2,h:6,type:'restaurant',name:'Masala Lane Kitchen',verified:true,cuisine:'South Indian · Thali',open:[8,23],
+   menu:[{item:'Ghee Masala Dosa',price:140},{item:'Mini Thali',price:220},{item:'Filter Coffee',price:40}],
+   slots:['12:30','13:00','19:30','20:00','21:00']},
+  {id:'u1',slot:3,h:9,type:'unclaimed',name:'Unnamed building',source:'OpenStreetMap way (demo record)'},
+  {id:'w1',slot:4,h:8,type:'cowork',name:'Deskline Cowork',verified:true,pass:'₹450 / day',
+   events:[{title:'React Bengaluru meetup',time:'Today 18:30',going:34},{title:'Founder office hours',time:'Sat 11:00',going:12}]},
+  /* slot 5 = park + AI guide */
+  {id:'p1',slot:6,h:7,type:'problem',name:'5th Block Problem Board',verified:true,
+   problems:[{title:'POS integration for 3-outlet bakery',by:'Crumb & Co (demo)',bounty:'₹15,000',skills:['Node','Payments'],team:1,need:2},
+             {title:'Kannada + English menu redesign',by:'Masala Lane Kitchen',bounty:'₹6,000',skills:['Design'],team:0,need:1},
+             {title:'Footpath blockage map for 5th Block',by:'Civic partner (demo)',bounty:'Certificate + ₹3,000',skills:['GIS','Survey'],team:3,need:5}]},
+  {id:'c2',slot:7,h:12,type:'company',name:'Kite Robotics',verified:true,
+   about:'Warehouse robotics. Hardware + embedded team.',
+   jobs:[{title:'Embedded Engineer (C/RTOS)',kind:'Full-time',pay:'₹15–24 LPA',posted:'1 day ago'}]},
+  {id:'r2',slot:8,h:5,type:'restaurant',name:'Bean & Bun Café',verified:true,cuisine:'Café · Bakery',open:[7,22],
+   menu:[{item:'Cold Brew',price:180},{item:'Paneer Croissant',price:160}],slots:['10:00','11:00','16:00','17:30']},
+  {id:'h2',slot:9,h:14,type:'hotel',name:'Metro Budget Rooms',verified:true,
+   about:'Budget rooms for interns and visiting candidates.',
+   rooms:[{name:'Single',price:1400,left:6},{name:'Twin',price:2100,left:2}],checkin:'11:00'},
+  {id:'u2',slot:10,h:11,type:'unclaimed',name:'Unnamed building',source:'Overture Places (demo record)'},
+  {id:'c3',slot:11,h:10,type:'company',name:'Pixel Kitchen Studio',verified:true,
+   about:'Design agency. Hires freelancers per project.',
+   jobs:[{title:'Freelance Motion Designer',kind:'Contract · 4 weeks',pay:'₹60k project',posted:'today'},
+         {title:'UX Research Intern',kind:'Internship · 2 months',pay:'₹20k / month',posted:'3 days ago'}]},
+  {id:'r3',slot:12,h:6,type:'restaurant',name:'Biryani Corner (demo)',verified:false,cuisine:'Biryani · Takeaway',open:[11,23],
+   menu:[{item:'Chicken Biryani',price:260},{item:'Veg Biryani',price:200}],slots:['13:00','20:00']},
+  {id:'u3',slot:13,h:8,type:'unclaimed',name:'Unnamed building',source:'OpenStreetMap way (demo record)'},
+  {id:'w2',slot:14,h:9,type:'cowork',name:'Hive Hall',verified:true,pass:'₹350 / day',
+   events:[{title:'Demo day: student projects',time:'Fri 17:00',going:58}]},
+  {id:'c4',slot:15,h:18,type:'company',name:'Ledgerly Fintech',verified:true,
+   about:'Payments infra for co-operatives.',
+   jobs:[{title:'Backend Engineer (Go)',kind:'Full-time',pay:'₹18–28 LPA',posted:'4 days ago'},
+         {title:'Data Analyst',kind:'Full-time',pay:'₹8–12 LPA',posted:'1 week ago'}]},
+];
+const byId = Object.fromEntries(ENTITIES.map(e=>[e.id,e]));
+const PARK_SLOT = 5;
+
+/* =====================================================================
+   2. WORLD BUILD  (real app: GLB tiles baked from OSM footprints)
+   ===================================================================== */
+const PITCH=14, N=4, HALF=4, W=N*PITCH;
+const slotCenter = s => ({x:(s%N)*PITCH+PITCH/2, z:Math.floor(s/N)*PITCH+PITCH/2});
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#cfe3ea');
+scene.fog = new THREE.Fog('#cfe3ea', 70, 160);
+const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 400);
+
+scene.add(new THREE.HemisphereLight('#ffffff','#7a8a7a',0.9));
+const sun = new THREE.DirectionalLight('#fff4e0',1.6);
+sun.position.set(W/2+30,60,W/2+20); sun.target.position.set(W/2,0,W/2);
+sun.castShadow = true; sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-50,right:50,top:50,bottom:-50,near:1,far:160});
+scene.add(sun, sun.target);
+
+// ground (asphalt) + block slabs (sidewalk)
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(W+40,W+40), new THREE.MeshStandardMaterial({color:'#5d646b'}));
+ground.rotation.x=-Math.PI/2; ground.position.set(W/2,0,W/2); ground.receiveShadow=true; scene.add(ground);
+
+const slabGeo = new THREE.BoxGeometry(11,0.2,11);
+for(let s=0;s<N*N;s++){
+  const c=slotCenter(s);
+  const slab=new THREE.Mesh(slabGeo,new THREE.MeshStandardMaterial({color: s===PARK_SLOT?'#7fb069':'#c9c6bd'}));
+  slab.position.set(c.x,0.1,c.z); slab.receiveShadow=true; scene.add(slab);
+}
+// dashed road centre lines, instanced
+{
+  const dashes=[]; for(let k=1;k<N;k++) for(let t=1;t<W;t+=3){ dashes.push([k*PITCH,t,0]); dashes.push([t,k*PITCH,1]); }
+  const im=new THREE.InstancedMesh(new THREE.BoxGeometry(0.15,0.02,1.4),new THREE.MeshBasicMaterial({color:'#e8e2c8'}),dashes.length);
+  const m=new THREE.Object3D();
+  dashes.forEach(([x,z,r],i)=>{m.position.set(x,0.02,z);m.rotation.set(0,r?Math.PI/2:0,0);m.updateMatrix();im.setMatrixAt(i,m.matrix);});
+  scene.add(im);
+}
+
+// navigation grid (1 m cells) — real app: baked navmesh per cell
+const G=W, blocked=new Uint8Array(G*G);
+const gi=(x,z)=>z*G+x;
+const isBlockedPos=(x,z)=>{const cx=Math.floor(x),cz=Math.floor(z);return cx<0||cz<0||cx>=G||cz>=G||blocked[gi(cx,cz)]===1;};
+
+function windowTexture(base){
+  const c=document.createElement('canvas'); c.width=c.height=64; const g=c.getContext('2d');
+  g.fillStyle=base; g.fillRect(0,0,64,64);
+  g.fillStyle='rgba(18,28,40,.55)'; for(let y=8;y<64;y+=32) for(let x=8;x<64;x+=32) g.fillRect(x,y,16,16);
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+function labelSprite(text,bg){
+  const c=document.createElement('canvas'); c.width=512; c.height=96; const g=c.getContext('2d');
+  g.font='600 40px system-ui,sans-serif'; const w=Math.min(500,g.measureText(text).width+44);
+  g.fillStyle=bg; g.beginPath(); g.roundRect((512-w)/2,8,w,80,40); g.fill();
+  g.fillStyle='#fff'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(text,256,50);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthWrite:false})); s.scale.set(8,1.5,1); return s;
+}
+function badgeText(e){
+  const T=TYPES[e.type];
+  if(e.type==='company') return `${T.icon} ${e.name} · ${e.jobs.length} jobs`;
+  if(e.type==='hotel') return `${T.icon} ${e.name} · from ₹${Math.min(...e.rooms.map(r=>r.price)).toLocaleString('en-IN')}`;
+  if(e.type==='restaurant') return `${T.icon} ${e.name} · ${isOpen(e)?'Open':'Closed'}`;
+  if(e.type==='cowork') return `${T.icon} ${e.name} · ${e.events.length} events`;
+  if(e.type==='problem') return `${T.icon} ${e.problems.length} open problems`;
+  return `${T.icon} Unclaimed`;
+}
+const isOpen = e => { const h=new Date().getHours(); return h>=e.open[0] && h<e.open[1]; };
+
+const clickables=[]; const buildingMats={};
+for(const e of ENTITIES){
+  const c=slotCenter(e.slot), T=TYPES[e.type];
+  e.door=new THREE.Vector3(c.x,0,c.z+HALF+1.5);
+  const tex=windowTexture(T.color).clone(); tex.needsUpdate=true; tex.repeat.set(4,Math.max(1,Math.round(e.h/2.5)));
+  const side=new THREE.MeshStandardMaterial({map:tex});
+  const roof=new THREE.MeshStandardMaterial({color:'#3a434c'});
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(HALF*2,e.h,HALF*2),[side,side,roof,roof,side,side]);
+  mesh.position.set(c.x,e.h/2+0.2,c.z); mesh.castShadow=mesh.receiveShadow=true;
+  side.transparent=roof.transparent=true;
+  mesh.userData={kind:'building',id:e.id,mats:[side,roof]}; scene.add(mesh); clickables.push(mesh); buildingMats[e.id]=side;
+  if(e.type!=='unclaimed'){
+    const door=new THREE.Mesh(new THREE.BoxGeometry(1.6,2.4,0.2),new THREE.MeshStandardMaterial({color:'#1d2a36'}));
+    door.position.set(c.x,1.4,c.z+HALF+0.05); scene.add(door);
+    const awn=new THREE.Mesh(new THREE.BoxGeometry(3.2,0.15,1.2),new THREE.MeshStandardMaterial({color:T.color}));
+    awn.position.set(c.x,2.9,c.z+HALF+0.55); awn.castShadow=true; scene.add(awn);
+  }
+  const lbl=labelSprite(badgeText(e),e.type==='unclaimed'?'rgba(90,96,104,.85)':T.color);
+  lbl.position.set(c.x,e.h+1.8,c.z); scene.add(lbl); mesh.userData.label=lbl;
+  for(let z=0;z<G;z++) for(let x=0;x<G;x++)
+    if(Math.abs(x+.5-c.x)<HALF+0.9 && Math.abs(z+.5-c.z)<HALF+0.9) blocked[gi(x,z)]=1;
+}
+
+// park: fountain + instanced trees (InstancedMesh = 1 draw call for all trees)
+{
+  const p=slotCenter(PARK_SLOT);
+  const f=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.6,0.6,24),new THREE.MeshStandardMaterial({color:'#9fb7c4'}));
+  f.position.set(p.x,0.5,p.z); f.castShadow=true; scene.add(f);
+  for(let z=-2;z<=1;z++) for(let x=-2;x<=1;x++) blocked[gi(Math.floor(p.x)+x,Math.floor(p.z)+z)]=1;
+  const pts=[]; for(let i=0;i<10;i++){ if(i===2) continue; const a=i/10*Math.PI*2; pts.push([p.x+Math.cos(a)*4.3,p.z+Math.sin(a)*4.3]); }
+  const trunk=new THREE.InstancedMesh(new THREE.CylinderGeometry(.15,.2,1.2,6),new THREE.MeshStandardMaterial({color:'#6b4f3a'}),pts.length);
+  const crown=new THREE.InstancedMesh(new THREE.ConeGeometry(1,2.4,7),new THREE.MeshStandardMaterial({color:'#3f7d4a'}),pts.length);
+  const m=new THREE.Object3D();
+  pts.forEach(([x,z],i)=>{ m.position.set(x,.8,z); m.updateMatrix(); trunk.setMatrixAt(i,m.matrix);
+    m.position.set(x,2.4,z); m.updateMatrix(); crown.setMatrixAt(i,m.matrix); blocked[gi(Math.floor(x),Math.floor(z))]=1; });
+  crown.castShadow=true; scene.add(trunk,crown);
+}
+
+/* =====================================================================
+   3. CHARACTERS  (real app: rigged GLB + AnimationMixer; here primitives)
+   ===================================================================== */
+function makeCharacter(shirt,skin='#c68a63'){
+  const root=new THREE.Group(), mat=c=>new THREE.MeshStandardMaterial({color:c});
+  const body=new THREE.Mesh(new THREE.BoxGeometry(.6,.75,.35),mat(shirt)); body.position.y=1.08;
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.24,16,12),mat(skin)); head.position.y=1.7;
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.25,16,8,0,Math.PI*2,0,Math.PI/2),mat('#222')); hair.position.y=1.74;
+  const limb=(w,h,c,x,y)=>{const pivot=new THREE.Group(); pivot.position.set(x,y,0);
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,w),mat(c)); m.position.y=-h/2; m.castShadow=true; pivot.add(m); root.add(pivot); return pivot;};
+  const legL=limb(.22,.7,'#2b3440',-.15,.72), legR=limb(.22,.7,'#2b3440',.15,.72);
+  const armL=limb(.16,.65,shirt,-.4,1.42), armR=limb(.16,.65,shirt,.4,1.42);
+  [body,head,hair].forEach(m=>{m.castShadow=true;root.add(m);});
+  root.userData.limbs={legL,legR,armL,armR}; root.userData.phase=0;
+  return root;
+}
+function animateWalk(ch,moving,dt){
+  const L=ch.userData.limbs;
+  if(moving){ ch.userData.phase+=dt*11; const s=Math.sin(ch.userData.phase)*.65;
+    L.legL.rotation.x=s; L.legR.rotation.x=-s; L.armL.rotation.x=-s*.8; L.armR.rotation.x=s*.8;
+    ch.children[0].position.y=1.08+Math.abs(Math.cos(ch.userData.phase))*.05;
+  } else for(const k in L) L[k].rotation.x*=Math.pow(.001,dt);
+}
+
+const player=makeCharacter('#0f7b6c'); player.position.set(PITCH*1.5,0,PITCH*2); scene.add(player);
+
+const pc=slotCenter(PARK_SLOT);
+const guide=makeCharacter('#6d5bd0','#8d5b3e'); guide.position.set(pc.x,0.2,pc.z+3.2); scene.add(guide);
+const guideLbl=labelSprite('🤖 City Guide · AI','#5b49c4'); guideLbl.scale.set(6,1.1,1); guideLbl.position.set(pc.x,2.6,pc.z+3.2); scene.add(guideLbl);
+guide.traverse(o=>{ if(o.isMesh){ o.userData={kind:'guide'}; clickables.push(o);} });
+blocked[gi(Math.floor(guide.position.x),Math.floor(guide.position.z))]=1;
+
+const marker=new THREE.Mesh(new THREE.RingGeometry(.35,.5,24),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true}));
+marker.rotation.x=-Math.PI/2; marker.visible=false; scene.add(marker);
+
+/* =====================================================================
+   4. PATHFINDING  (A* on grid; real app: run in a Web Worker on navmesh)
+   ===================================================================== */
+const DIRS=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+function nearestFree(x,z){
+  if(!blocked[gi(x,z)]) return [x,z];
+  for(let r=1;r<8;r++) for(let dz=-r;dz<=r;dz++) for(let dx=-r;dx<=r;dx++){
+    const nx=x+dx,nz=z+dz; if(nx>=0&&nz>=0&&nx<G&&nz<G&&!blocked[gi(nx,nz)]) return [nx,nz]; }
+  return null;
+}
+function astar(sx,sz,tx,tz){
+  const s=gi(sx,sz), t=gi(tx,tz);
+  const g=new Float32Array(G*G).fill(Infinity), came=new Int32Array(G*G).fill(-1), closed=new Uint8Array(G*G);
+  const h=i=>Math.hypot(i%G-tx,((i/G)|0)-tz);
+  const open=[{i:s,f:h(s)}]; g[s]=0;
+  while(open.length){
+    let b=0; for(let k=1;k<open.length;k++) if(open[k].f<open[b].f) b=k;
+    const cur=open.splice(b,1)[0].i; if(cur===t) break; if(closed[cur]) continue; closed[cur]=1;
+    const cx=cur%G, cz=(cur/G)|0;
+    for(const [dx,dz] of DIRS){
+      const nx=cx+dx,nz=cz+dz; if(nx<0||nz<0||nx>=G||nz>=G) continue;
+      const ni=gi(nx,nz); if(blocked[ni]||closed[ni]) continue;
+      if(dx&&dz&&(blocked[gi(cx+dx,cz)]||blocked[gi(cx,cz+dz)])) continue;
+      const ng=g[cur]+(dx&&dz?Math.SQRT2:1);
+      if(ng<g[ni]){ g[ni]=ng; came[ni]=cur; open.push({i:ni,f:ng+h(ni)}); }
+    }
+  }
+  if(s!==t && came[t]===-1) return null;
+  const path=[]; for(let c=t;c!==s&&c!==-1;c=came[c]) path.push(new THREE.Vector3(c%G+.5,0,((c/G)|0)+.5));
+  return path.reverse();
+}
+let path=null, onArrive=null;
+function walkTo(v,then=null){
+  const st=[Math.floor(player.position.x),Math.floor(player.position.z)];
+  const tg=nearestFree(Math.floor(v.x),Math.floor(v.z)); if(!tg) return;
+  const p=astar(st[0],st[1],tg[0],tg[1]);
+  if(!p){ toast('No walkable route there.'); return; }
+  path=p; onArrive=then; marker.position.set(tg[0]+.5,.05,tg[1]+.5); marker.visible=true; marker.material.opacity=1;
+}
+
+/* =====================================================================
+   5. INPUT + CAMERA + MODES
+   ===================================================================== */
+let mode='walk', camYaw=0, camDist=16;
+const keys={};
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
+  keys[e.key.toLowerCase()]=true;
+  if((e.key==='e'||e.key==='Enter') && nearby) nearby.action();
+  if(e.key==='Escape') closePanel();
+});
+addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+renderer.domElement.addEventListener('wheel',e=>{camDist=THREE.MathUtils.clamp(camDist+e.deltaY*.02,7,40);},{passive:true});
+
+const ray=new THREE.Raycaster(), ptr=new THREE.Vector2();
+let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,drag:false};});
+renderer.domElement.addEventListener('pointermove',e=>{
+  if(!down) return; const dx=e.clientX-down.x;
+  if(Math.abs(dx)>6||Math.abs(e.clientY-down.y)>6) down.drag=true;
+  if(down.drag && mode==='walk'){ camYaw-=e.movementX*.006; }
+});
+renderer.domElement.addEventListener('pointerup',e=>{ if(down&&!down.drag) handleClick(e); down=null; });
+
+function handleClick(e){
+  ptr.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1); ray.setFromCamera(ptr,camera);
+  const hit=ray.intersectObjects(clickables,false)[0];
+  if(hit?.object.userData.kind==='building'){
+    const ent=byId[hit.object.userData.id];
+    if(mode!=='walk'){ openEntity(ent.id); return; }
+    if(player.position.distanceTo(ent.door)<2.5) openEntity(ent.id); else walkTo(ent.door,()=>openEntity(ent.id));
+    return;
+  }
+  if(hit?.object.userData.kind==='guide'){
+    if(mode!=='walk'||player.position.distanceTo(guide.position)<3) openGuide(); else walkTo(guide.position.clone().add(new THREE.Vector3(0,0,1.5)),openGuide);
+    return;
+  }
+  if(mode!=='walk') return;
+  const g=ray.intersectObject(ground)[0]; if(g) walkTo(g.point);
+}
+
+document.getElementById('modes').addEventListener('click',e=>{ const m=e.target.dataset.mode; if(m) setMode(m); });
+function setMode(m){
+  mode=m; document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  if(m==='list') renderList(); else if(panelKind==='list') closePanel();
+}
+
+const SPEED=5.5; let nearby=null;
+function step(dt){
+  let mx=0,mz=0;
+  if(keys.w||keys.arrowup) mz-=1; if(keys.s||keys.arrowdown) mz+=1;
+  if(keys.a||keys.arrowleft) mx-=1; if(keys.d||keys.arrowright) mx+=1;
+  let moving=false;
+  if(mode==='walk' && (mx||mz)){
+    path=null; onArrive=null; marker.visible=false;
+    const l=Math.hypot(mx,mz); mx/=l; mz/=l; const s=Math.sin(camYaw), c=Math.cos(camYaw);
+    move(c*mx+s*mz, -s*mx+c*mz, dt); moving=true;
+  } else if(path){
+    const t=path[0], dx=t.x-player.position.x, dz=t.z-player.position.z, d=Math.hypot(dx,dz);
+    if(d<.12){ path.shift(); if(!path.length){ path=null; marker.visible=false; const f=onArrive; onArrive=null; f&&f(); } }
+    else { move(dx/d,dz/d,dt,d); moving=true; }
+  }
+  animateWalk(player,moving,dt);
+  // idle guide: gentle sway, faces player when close
+  guide.rotation.y=THREE.MathUtils.lerp(guide.rotation.y,
+    player.position.distanceTo(guide.position)<5?Math.atan2(player.position.x-guide.position.x,player.position.z-guide.position.z):0,.08);
+  if(marker.visible) marker.material.opacity=.6+.4*Math.sin(performance.now()/150);
+  updateNearby();
+}
+function move(wx,wz,dt,maxD=Infinity){
+  const d=Math.min(SPEED*dt,maxD), p=player.position;
+  const nx=p.x+wx*d, nz=p.z+wz*d;
+  if(!isBlockedPos(nx,p.z)) p.x=nx; if(!isBlockedPos(p.x,nz)) p.z=nz;
+  const target=Math.atan2(wx,wz); let diff=target-player.rotation.y;
+  diff=Math.atan2(Math.sin(diff),Math.cos(diff)); player.rotation.y+=diff*Math.min(1,dt*12);
+}
+const promptEl=document.getElementById('prompt');
+promptEl.onclick=()=>nearby&&nearby.action();
+function updateNearby(){
+  nearby=null;
+  if(mode==='walk'&&!panelOpen()){
+    if(player.position.distanceTo(guide.position)<3) nearby={text:'Talk to City Guide (AI) · E',action:openGuide};
+    else for(const e of ENTITIES) if(player.position.distanceTo(e.door)<2.4){
+      nearby={text:`${TYPES[e.type].icon} Enter ${e.type==='unclaimed'?'unclaimed building':e.name} · E`,action:()=>openEntity(e.id)}; break; }
+  }
+  promptEl.style.display=nearby?'block':'none'; if(nearby) promptEl.textContent=nearby.text;
+}
+
+const camTarget=new THREE.Vector3(), camPos=new THREE.Vector3();
+function updateCamera(dt){
+  const k=1-Math.exp(-dt*5);
+  if(mode==='walk'){
+    camTarget.copy(player.position).add(new THREE.Vector3(0,1.2,0));
+    camPos.set(player.position.x+Math.sin(camYaw)*camDist*.6, camDist*1.1, player.position.z+Math.cos(camYaw)*camDist*.6);
+  } else { camTarget.set(W/2,0,W/2); camPos.set(W/2,72,W/2+34); }
+  camera.position.lerp(camPos,k);
+  camera.userData.look=(camera.userData.look||camTarget.clone()).lerp(camTarget,k);
+  camera.lookAt(camera.userData.look);
+  fadeOccluders();
+}
+// buildings between camera and player turn see-through (walk mode only)
+const occRay=new THREE.Raycaster(), head=new THREE.Vector3();
+function fadeOccluders(){
+  const hidden=new Set();
+  if(mode==='walk'){
+    head.copy(player.position).y+=1.2;
+    const dir=head.clone().sub(camera.position), len=dir.length();
+    occRay.set(camera.position,dir.normalize()); occRay.far=len;
+    for(const h of occRay.intersectObjects(clickables,false)) if(h.object.userData.kind==='building') hidden.add(h.object);
+  }
+  for(const m of clickables){
+    if(m.userData.kind!=='building') continue;
+    const target=hidden.has(m)?.18:1;
+    for(const mat of m.userData.mats){ mat.opacity+= (target-mat.opacity)*.2; mat.depthWrite=mat.opacity>.95; }
+    m.userData.label.visible=!hidden.has(m) && camera.position.distanceTo(m.userData.label.position)>12;
+  }
+}
+
+/* =====================================================================
+   6. UI PANELS — one renderer per business type
+   ===================================================================== */
+const panel=document.getElementById('panel'); let panelKind=null;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const panelOpen=()=>panel.classList.contains('show');
+function showPanel(html,kind){ panelKind=kind; panel.innerHTML=`<button class="close" data-act="close">✕</button>`+html; panel.classList.add('show'); panel.scrollTop=0; }
+function closePanel(){ panel.classList.remove('show'); panelKind=null; if(mode==='list') setMode('map'); }
+
+function header(e){
+  const T=TYPES[e.type];
+  const badge = e.type==='unclaimed' ? '<span class="chip warn">Unclaimed · not a CityWalk member</span>'
+    : e.verified ? '<span class="chip ok">✓ Verified owner</span>' : '<span class="chip warn">Claim pending verification</span>';
+  return `<div class="sub">${T.icon} ${T.label}</div><h2>${esc(e.name)}</h2>${badge}<span class="chip">Demo data</span>`;
+}
+const RENDER={
+  company:e=>`${header(e)}<p>${esc(e.about)}</p>
+    <h3>Open roles (${e.jobs.length})</h3>
+    ${e.jobs.map((j,i)=>`<div class="card"><div class="row"><b>${esc(j.title)}</b></div>
+      <div class="sub">${esc(j.kind)} · ${esc(j.pay)} · posted ${esc(j.posted)}</div>
+      <div style="margin-top:8px;display:flex;gap:6px"><button class="btn" data-act="apply" data-i="${i}">Apply</button>
+      <button class="btn ghost" data-act="intro">Request intro</button></div></div>`).join('')}
+    <div class="note">Apply creates a draft you review first. Nothing is sent automatically.</div>`,
+  hotel:e=>`${header(e)}<p>${esc(e.about)}</p>
+    <h3>Check availability</h3>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><input type="date" id="d1"><input type="date" id="d2"></div>
+    <h3>Rooms</h3>
+    ${e.rooms.map((r,i)=>`<div class="card"><div class="row"><b>${esc(r.name)}</b><b>₹${r.price.toLocaleString('en-IN')}<span class="sub">/night</span></b></div>
+      <div class="row" style="margin-top:6px"><span class="chip ${r.left?'ok':'warn'}">${r.left?r.left+' left':'Sold out'}</span>
+      <button class="btn" data-act="book" data-i="${i}" ${r.left?'':'disabled'}>Request booking</button></div></div>`).join('')}
+    <div class="note">Check-in ${esc(e.checkin)}. Real app: live rates from hotel's channel manager / partner API.</div>`,
+  restaurant:e=>`${header(e)}<div class="sub" style="margin-top:6px">${esc(e.cuisine)} · ${e.open[0]}:00–${e.open[1]}:00 ·
+      <b style="color:${isOpen(e)?'#0b5e45':'#b54708'}">${isOpen(e)?'Open now':'Closed now'}</b></div>
+    <h3>Menu (owner-supplied)</h3>
+    ${e.menu.map(m=>`<div class="card"><div class="row"><span>${esc(m.item)}</span><b>₹${m.price}</b></div></div>`).join('')}
+    <h3>Reserve a table</h3>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <select id="party">${[1,2,3,4,5,6].map(n=>`<option>${n}</option>`).join('')}</select> people at
+      <select id="slot">${e.slots.map(s=>`<option>${s}</option>`).join('')}</select>
+      <button class="btn" data-act="reserve" ${e.verified?'':'disabled'}>Request table</button></div>
+    ${e.verified?'':'<div class="note">Booking turns on after ownership is verified.</div>'}`,
+  cowork:e=>`${header(e)}<div class="sub" style="margin-top:6px">Day pass ${esc(e.pass)}</div>
+    <h3>Events here</h3>
+    ${e.events.map((v,i)=>`<div class="card"><div class="row"><b>${esc(v.title)}</b></div>
+      <div class="row"><span class="sub">${esc(v.time)} · ${v.going} going</span><button class="btn" data-act="rsvp" data-i="${i}">RSVP</button></div></div>`).join('')}
+    <button class="btn ghost" data-act="pass" style="margin-top:6px">Buy day pass</button>`,
+  problem:e=>`${header(e)}<p>Real problems posted by local businesses and civic partners. Form a team, solve it, get verified.</p>
+    ${e.problems.map((p,i)=>`<div class="card"><b>${esc(p.title)}</b>
+      <div class="sub">by ${esc(p.by)} · reward ${esc(p.bounty)}</div>
+      <div>${p.skills.map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
+      <div class="row" style="margin-top:6px"><span class="sub">Team ${p.team}/${p.need}</span>
+      <button class="btn" data-act="join" data-i="${i}" ${p.team>=p.need?'disabled':''}>Join team</button></div></div>`).join('')}`,
+  unclaimed:e=>`${header(e)}
+    <p>This building comes from public map data (${esc(e.source)}). No account is linked, so no jobs, menu or contact details are shown.</p>
+    <button class="btn" data-act="claim">Is this your business? Claim it</button>
+    <button class="btn ghost" data-act="report" style="margin-left:6px">Report wrong info</button>
+    <div class="note">Map data © OpenStreetMap contributors / Overture (attribution kept per source).</div>`,
+};
+let current=null;
+function openEntity(id){ current=byId[id]; showPanel(RENDER[current.type](current),'entity'); }
+
+function openGuide(){
+  showPanel(`<div class="sub">🤖 AI character</div><h2>City Guide</h2><span class="chip ai">AI, not a real person</span>
+    <p>Hi! I only point to places listed here, and I won't make anything up. What do you need?</p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <button class="btn" data-act="ask" data-t="company">Find jobs</button>
+      <button class="btn" data-act="ask" data-t="restaurant">Where to eat?</button>
+      <button class="btn" data-act="ask" data-t="hotel">Stay nearby</button>
+      <button class="btn" data-act="ask" data-t="problem">Problems to solve</button>
+      <button class="btn" data-act="ask" data-t="cowork">Events today</button></div><div id="ans"></div>`,'guide');
+}
+function guideAnswer(type){
+  const list=ENTITIES.filter(e=>e.type===type);
+  highlight(list.map(e=>e.id));
+  const line=e=> type==='company'? e.jobs.map(j=>j.title).join(', ')
+    : type==='restaurant'? `${e.cuisine} · ${isOpen(e)?'open now':'closed now'}`
+    : type==='hotel'? `from ₹${Math.min(...e.rooms.map(r=>r.price)).toLocaleString('en-IN')}/night`
+    : type==='problem'? e.problems.map(p=>p.title).join(' · ')
+    : e.events.map(v=>`${v.title} (${v.time})`).join(' · ');
+  document.getElementById('ans').innerHTML=`<h3>Found ${list.length} · highlighted in the city</h3>`+
+    list.map(e=>`<div class="card"><b>${esc(e.name)}</b><div class="sub">${esc(line(e))}</div>
+      <div style="margin-top:6px;display:flex;gap:6px"><button class="btn" data-act="goto" data-id="${e.id}">Walk me there</button>
+      <button class="btn ghost" data-act="open" data-id="${e.id}">Details</button></div></div>`).join('')+
+    `<div class="note">Why these: matched by category only. Real app: rules + retrieval first, then the LLM writes the explanation from these records.</div>`;
+}
+
+function renderList(){
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const items=ENTITIES.filter(e=>matches(e,q));
+  const groups=Object.keys(TYPES).map(t=>[t,items.filter(e=>e.type===t)]).filter(([,l])=>l.length);
+  showPanel(`<h2>All places</h2><div class="sub">Same data as the 3D view. Works on any phone.</div>`+
+    groups.map(([t,l])=>`<h3>${TYPES[t].icon} ${TYPES[t].label}</h3>`+l.map(e=>`<div class="listitem" data-act="open" data-id="${e.id}">
+      <span class="dot" style="background:${TYPES[e.type].color}"></span><div><b>${esc(e.name)}</b><div class="sub">${esc(badgeText(e).replace(/^\S+\s/,''))}</div></div></div>`).join('')).join('')
+    || '<p>No matches.</p>','list');
+}
+function matches(e,q){
+  if(!q) return true;
+  const hay=[e.name,e.type,TYPES[e.type].label,e.about,e.cuisine,
+    ...(e.jobs||[]).flatMap(j=>[j.title,j.kind]),...(e.menu||[]).map(m=>m.item),
+    ...(e.rooms||[]).map(r=>r.name),...(e.events||[]).map(v=>v.title),
+    ...(e.problems||[]).flatMap(p=>[p.title,...p.skills])].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+function highlight(ids){
+  for(const id in buildingMats){ const m=buildingMats[id]; m.emissive.set(ids.includes(id)?'#ffd84d':'#000000'); m.emissiveIntensity=ids.includes(id)?.45:0; }
+}
+document.getElementById('search').addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  highlight(q?ENTITIES.filter(x=>matches(x,q)).map(x=>x.id):[]);
+  if(mode==='list') renderList();
+});
+
+panel.addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-act]'); if(!b) return; const a=b.dataset.act, i=+b.dataset.i;
+  if(a==='close') return closePanel();
+  if(a==='open') return openEntity(b.dataset.id);
+  if(a==='ask') return guideAnswer(b.dataset.t);
+  if(a==='goto'){ const e=byId[b.dataset.id]; closePanel(); setMode('walk'); highlight([e.id]); walkTo(e.door,()=>openEntity(e.id)); return; }
+  const msg={
+    apply:()=>`Draft application for “${current.jobs[i].title}” saved. Review & send from your inbox.`,
+    intro:()=>`Intro request drafted to ${current.name}'s hiring team. You confirm before it's sent.`,
+    book:()=>{ const d1=document.getElementById('d1').value||'(pick dates)'; return `Booking request: ${current.rooms[i].name}, ${d1}. Hotel confirms availability.`; },
+    reserve:()=>`Table request: ${document.getElementById('party').value} people at ${document.getElementById('slot').value}. Restaurant confirms.`,
+    rsvp:()=>{ current.events[i].going++; openEntity(current.id); return `RSVP saved for ${current.events[i].title}.`; },
+    pass:()=>`Day pass checkout would open here (payment provider, not AI).`,
+    join:()=>{ const p=current.problems[i]; p.team++; openEntity(current.id); return `You joined “${p.title}”. Team ${p.team}/${p.need}.`; },
+    claim:()=>`Claim flow: verify ownership (document + phone/GST check) before anything is published.`,
+    report:()=>`Report logged for review.`,
+  }[a];
+  if(msg) toast(msg()+'  (demo)');
+});
+
+let toastT; function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(toastT); toastT=setTimeout(()=>el.style.display='none',3200); }
+
+document.getElementById('legend').innerHTML=Object.values(TYPES).map(t=>`<span><span class="dot" style="background:${t.color}"></span>${t.label}</span>`).join('');
+
+/* =====================================================================
+   7. LOOP
+   ===================================================================== */
+const clock=new THREE.Clock();
+function frame(){ const dt=Math.min(clock.getDelta(),.05); step(dt); updateCamera(dt); renderer.render(scene,camera); requestAnimationFrame(frame); }
+addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+camera.position.set(W/2,60,W/2+40); frame();
+window.__cw={player,walkTo,openEntity,ENTITIES};
+</script>
+</body>
+</html>

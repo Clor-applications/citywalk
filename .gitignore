@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# env (never commit real values; .env.example is force-added)
+.env
+.env.local
+.env.*.local
+
+# build output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# os / editor
+.DS_Store
+.vscode/
+.idea/
+
+# agent + browser-automation tooling
+.claude/
+.playwright-mcp/
